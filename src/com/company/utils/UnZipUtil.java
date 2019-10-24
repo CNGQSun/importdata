@@ -139,7 +139,7 @@ public class UnZipUtil {
                     File dir = new File(dstPath + "/" + zipEntry.getName());
                         dir.mkdirs();
                         //System.out.println("mkdirs: " + dir.getCanonicalPath());
-                        continue;//跳出
+                        continue;
                 } else {
                     File file = createFile(dstPath, zipEntry.getName());
                     OutputStream outputStream = new FileOutputStream(file);
