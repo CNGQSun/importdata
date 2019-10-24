@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c3p0-config>
+    <!--配置默认节点-->
+    <default-config>
+        <property name="driverClass">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="jdbcUrl">jdbc:sqlserver://123.59.87.196:1433;DatabaseName=wechat_db</property>
+        <property name="user">user1</property>
+        <property name="password">help7575</property>
+    </default-config>
+</c3p0-config>
