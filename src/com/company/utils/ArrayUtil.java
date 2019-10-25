@@ -82,9 +82,9 @@ public class ArrayUtil {
         }
         String s = "";
             for (Object o : sx) {
-                    String replace= strings1[(int) o].replace("\'", "\"");
+                   ;
                     s += "'";
-                    s += replace;
+                    s += strings1[(int) o];
                     s += "'";
                     s += ",";
             }

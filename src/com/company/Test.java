@@ -3,25 +3,26 @@ package com.company;
 import com.company.utils.ReadFileUtil;
 import com.company.utils.SqlUtil;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+
 public class Test {
 
     public static void main(String[] args) {
+        Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+        System.out.println( start+"\t程序开始运行");
         if (args.length == 2) {
+            System.out.println("待解压文件路径：" + args[0] + "\t解压后的路径：" + args[1]);
             //文件判断
-            if (ReadFileUtil.judgeFilePath(args[0], args[1])==0) {
+            if (ReadFileUtil.judgeFilePath(args[0], args[1])) {
                 SqlUtil.runInsert(args[0], args[1]);
-            } else if (ReadFileUtil.judgeFilePath(args[0], args[1])==1){
-                System.out.println("请检查您输入的解压后路径不是文件夹，已将文件解压至E:/test");
-                SqlUtil.runInsert(args[0], "E:/test");
-            }else if (ReadFileUtil.judgeFilePath(args[0], args[1])==2){
-                System.out.println("请检查您输入的解压后路径不存在，已将文件解压至E:/test");
-                SqlUtil.runInsert(args[0], "E:/test");
-            }else {
-                System.out.println("您输入的待解压文件不正确！");
             }
         } else {
             System.out.println("您输入的参数个数不正确");
         }
-        //E:/test1/test7.zip E:/test
+        Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+        long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
+        System.out.println(end+"\t程序运行结束,共耗时：" + timeElapsed + "毫秒");
     }
 }

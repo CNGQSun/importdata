@@ -2,8 +2,11 @@ package com.company.utils;
 
 
 import java.io.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -99,7 +102,6 @@ public class UnZipUtil {
     private static File createFile(String dstPath, String fileName) throws IOException {
         String[] dirs = fileName.split("/");//将文件名的各级目录分解
         File file = new File(dstPath);
-
         if (dirs.length > 1) {//文件有上级目录
             for (int i = 0; i < dirs.length - 1; i++) {
                 file = new File(file, dirs[i]);//依次创建文件对象知道文件的上一级目录
@@ -127,7 +129,9 @@ public class UnZipUtil {
      * @return
      */
     public static boolean unzip(String zipFileName, String dstPath) {
-        System.out.println("文件正在解压缩...");
+        Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+        System.out.println(start+"\t文件正在解压缩...");
+        int countFileNum=0;
         try {
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFileName));
             ZipEntry zipEntry = null;
@@ -147,6 +151,7 @@ public class UnZipUtil {
                     }
                     outputStream.close();
                     System.out.println("解压后的路径: " + file.getCanonicalPath());
+                    countFileNum++;
                     fileNames.add(file.getCanonicalPath());
                 }
             }    // end while
@@ -159,7 +164,9 @@ public class UnZipUtil {
             e.printStackTrace();
             return false;
         }
-        System.out.println("文件解压缩成功!");
+        Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+        long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
+        System.out.println(end+"\t文件解压缩成功,共"+countFileNum+"个文件,耗时"+timeElapsed + "毫秒");
         return true;
     }
 

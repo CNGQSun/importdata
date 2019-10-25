@@ -29,38 +29,6 @@ public class ReadFileUtil {
         }
         if (unZip) {
             unzipPathArrayList = UnZipUtil.fileNames;
- /*           if (unzipPathArrayList.size() > 0) {
-                //遍历数组
-                for (Object path : unzipPathArrayList) {
-                    String unzipPath = (String) path;
-                    //拼接解压后的文件路径
-                    File file1 = new File(unzipPath);
-                    //对文件进行判断
-                    if (file1.isFile()) {
-                        ArrayList arrayList = new ArrayList();
-                        //逐行读取文件
-                        try {
-                            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(unzipPath), "utf-8"));//构造一个BufferedReader类来读取文件
-                            String s = null;
-                            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                                //添加到arraylist集合中
-                                arrayList.add(s);
-                            }
-                            br.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        //将每一个读取后的文件添加到fileArrayList中
-                        fileArrayList.add(arrayList);
-                    } else {
-                        System.out.println("找不到该文件!");
-                        return null;
-                    }
-                }
-            } else {
-                System.out.println("压缩包里没有文件!");
-                return null;
-            }*/
         } else {
             System.out.println("文件解压缩失败!");
         }
@@ -92,7 +60,7 @@ public class ReadFileUtil {
      * @param pathfile 传入zip文件的路径
      * @return zip文件的绝对路径
      */
-    public static int judgeFilePath(String pathfile, String unzipFilePath) {
+    public static Boolean judgeFilePath(String pathfile, String unzipFilePath) {
         //读取输入路径的文件
         File zipFile = new File(pathfile);
         File unzipFile = new File(unzipFilePath);
@@ -100,75 +68,22 @@ public class ReadFileUtil {
             if (unzipFile.exists()){
                 if (unzipFile.isDirectory()){
                     //待解压文件和解压后路径都正确，返回0
-                    return 0;
+                    return true;
                 }else {
-                    //待解压文件正确，解压后的路径不正确，返回1
-                    return 1;
+                    System.out.println("您输入的解压后路径不是文件夹");
+                    //待解压文件正确，解压后的路径是文件，返回1
+                    return false;
                 }
             }else {
-                //待解压文件正确，解压后路径不正确，返回2
-                return 2;
+                //待解压文件正确，解压后路径不存在，返回2
+                System.out.println("您输入的解压后路径不存在，已帮您新建该文件夹");
+                unzipFile.mkdir();
+                return true;
             }
         }else {
+            System.out.println("您输入的待解压文件不正确！");
             //待解压文件不存在，返回3
-            return 3;
+            return false;
         }
     }
-
-    /**
-     * 读取参照文件，非配置文件
-     * @return
-     */
-    /*public static String readFile() {//路径
-        String file = "s.properties";
-        File file1 = new File(file);
-        ArrayList arrayList = new ArrayList();
-        if (file1.isFile()) {
-            try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));//构造一个BufferedReader类来读取文件
-                String s = null;
-                while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                    arrayList.add(s);
-                }
-                br.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("找不到参照文件");
-            return null;
-        }
-        return (String) arrayList.get(0);
-    }*/
-
-    /**
-     * 读取指定目录下的zip文件
-     *
-     * @param pathfile 传入zip文件所在文件夹
-     * @return
-     */
-   /* public static String getFilePath(String pathfile) {
-
-        String filePath = null;
-        if (pathfile != null) {
-            //读取输入路径的文件
-            File[] list = new File(pathfile).listFiles();
-
-            if (list != null) {
-                for (File file : list) {
-                    if (file.isFile()) {
-                        if (file.getName().endsWith(".zip")) {
-                            // 就输出该文件的绝对路径
-                            filePath = file.getAbsolutePath();
-                        } else {
-                            filePath = null;
-                        }
-                    }
-                }
-            } else {
-                System.out.println("请输入正确的目录");
-            }
-        }
-        return filePath;
-    }*/
 }
