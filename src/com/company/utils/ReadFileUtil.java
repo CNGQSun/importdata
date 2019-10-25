@@ -92,14 +92,27 @@ public class ReadFileUtil {
      * @param pathfile 传入zip文件的路径
      * @return zip文件的绝对路径
      */
-    public static Boolean judgeFilePath(String pathfile, String unzipFilePath) {
+    public static int judgeFilePath(String pathfile, String unzipFilePath) {
         //读取输入路径的文件
         File zipFile = new File(pathfile);
         File unzipFile = new File(unzipFilePath);
-        if (zipFile.isFile() && unzipFile.isDirectory()) {
-            return true;
+        if (zipFile.isFile()){
+            if (unzipFile.exists()){
+                if (unzipFile.isDirectory()){
+                    //待解压文件和解压后路径都正确，返回0
+                    return 0;
+                }else {
+                    //待解压文件正确，解压后的路径不正确，返回1
+                    return 1;
+                }
+            }else {
+                //待解压文件正确，解压后路径不正确，返回2
+                return 2;
+            }
+        }else {
+            //待解压文件不存在，返回3
+            return 3;
         }
-        return false;
     }
 
     /**

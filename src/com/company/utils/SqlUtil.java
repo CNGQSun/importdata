@@ -1,9 +1,6 @@
 package com.company.utils;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,10 +21,10 @@ public class SqlUtil {
             String[] template = header.split("\t");
             //遍历解压后的文件，分别进行数据库导入操作
             for (Object path : fileArrayList) {
-                System.out.println("\n");
+                System.out.println();
                 String unzipPath = (String) path;
-                String[] split = unzipPath.split("\\\\");
-                String fileName = split[split.length - 1];
+                File file=new File(unzipPath);
+                String fileName = file.getName();
                 System.out.println(fileName + "正在导入中...");
                 BufferedReader br = null;
                 try {
