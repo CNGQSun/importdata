@@ -6,17 +6,10 @@ import java.util.Properties;
 
 public class ReadFileUtil {
     /**
-     *
-     *
-     * @param zipFilePath 文件名
-     * @return ArrayList
-     */
-    /**
-     * 解压zip文件，将文件集合存储在ArrayList中
-     *
-     * @param zipFilePath
-     * @param unzipFilePath
-     * @return
+     * 解压zip文件
+     * @param zipFilePath 需要解压缩的文件
+     * @param unzipFilePath 解压后的文件存储路径
+     * @return 返回的是解压后的所有文件的全路径，存储在arraylist中
      */
     public static ArrayList readZipFile(String zipFilePath, String unzipFilePath) {//路径
         ArrayList unzipPathArrayList = null;
@@ -77,7 +70,7 @@ public class ReadFileUtil {
             }else {
                 //待解压文件正确，解压后路径不存在，返回2
                 System.out.println("您输入的解压后路径不存在，已帮您新建该文件夹");
-                unzipFile.mkdir();
+                unzipFile.mkdirs();
                 return true;
             }
         }else {
@@ -86,4 +79,38 @@ public class ReadFileUtil {
             return false;
         }
     }
+
+
+    /**
+     *  复制单个文件
+     *  @param  oldPath  String  原文件路径  如：c:/fqf.txt
+     *  @param  newPath  String  复制后路径  如：f:/fqf.txt
+     *  @return  boolean
+     */
+    public static   void  copyFile(String  oldPath,  String  newPath)  {
+        try  {
+//           int  bytesum  =  0;
+            int  byteread  =  0;
+            File  oldfile  =  new  File(oldPath);
+            if  (oldfile.exists())  {  //文件存在时
+                InputStream  inStream  =  new  FileInputStream(oldPath);  //读入原文件
+                FileOutputStream  fs  =  new  FileOutputStream(newPath);
+                byte[]  buffer  =  new  byte[1444];
+//               int  length;
+                while  (  (byteread  =  inStream.read(buffer))  !=  -1)  {
+//                   bytesum  +=  byteread;  //字节数  文件大小
+//                   System.out.println(bytesum);
+                    fs.write(buffer,  0,  byteread);
+                }
+                inStream.close();
+            }
+        }
+        catch  (Exception  e)  {
+            System.out.println("复制单个文件操作出错");
+            e.printStackTrace();
+
+        }
+
+    }
+
 }

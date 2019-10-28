@@ -24,11 +24,68 @@ public class ArrayUtil {
     }
 
     /**
-     * 传入字段值 处理字段值
+     * 判断模板文件所需要的字段是否都存在于目标文件中，存在返回true
      *
-     * @param
-     * @return 返回'a','b','c'格式的String
+     * @param targetHead 目标头
+     * @param template   模板
+     * @return boolean类型
      */
+    public static Boolean judgeArray(String[] targetHead, String[] template) {
+        sx = new ArrayList();
+        ArrayList arrayList = new ArrayList();
+        Boolean b = true;
+        for (int i = 0; i < targetHead.length; i++) {
+            arrayList.add(targetHead[i]);
+        }
+        for (int i = 0; i < template.length; i++) {
+            if (!arrayList.contains((String) template[i])) {
+                b = false;
+                break;
+            } else {
+                sx.add((int) arrayList.indexOf((String) template[i]));
+            }
+        }
+        return b;
+    }
+
+    /**
+     * @param targetHead 目标文件的字段名
+     * @param targe      目标文件的字段值
+     * @return 返回"'a','b','c',..."格式的String
+     */
+    public static String content(String[] targetHead, String[] targe) {
+        String[] strings1 = new String[targetHead.length];
+        int index = targe.length;
+        if (targe.length < targetHead.length) {
+            int i = targetHead.length - targe.length;
+            for (int k = 0; k < targe.length; k++) {
+                strings1[k] = targe[k];
+            }
+            for (int j = 0; j < i; j++) {
+                strings1[index] = "";
+                index++;
+            }
+        }
+        String s = "";
+        for (Object o : sx) {
+            ;
+            s += "'";
+            s += strings1[(int) o];
+            s += "'";
+            s += ",";
+        }
+        s = s.substring(0, s.length() - 1);
+        return s;
+    }
+}
+
+
+/**
+ * 传入字段值 处理字段值
+ *
+ * @param
+ * @return 返回'a','b','c'格式的String
+ */
    /* public static String content(String[] field, String[] strings) {
         String s = "";
         for (int i = 0; i < strings.length; i++) {
@@ -49,46 +106,3 @@ public class ArrayUtil {
         s = s.substring(0, s.length() - 1);
         return s;
     }*/
-    public static Boolean judgeArray(String[] targetHead, String[] template) {
-        sx=new ArrayList();
-        ArrayList arrayList = new ArrayList();
-        Boolean b = true;
-        for (int i = 0; i < targetHead.length; i++) {
-            arrayList.add(targetHead[i]);
-        }
-        for (int i = 0; i < template.length; i++) {
-            if (!arrayList.contains((String) template[i])) {
-                b = false;
-                break;
-            } else {
-                sx.add((int) arrayList.indexOf((String) template[i]));
-            }
-        }
-        return b;
-    }
-
-    public static String content(String[] targetHead, String[] targe) {
-        String[] strings1 = new String[targetHead.length];
-        int index = targe.length;
-        if (targe.length < targetHead.length) {
-            int i = targetHead.length - targe.length;
-            for (int k = 0; k < targe.length; k++) {
-                strings1[k] = targe[k];
-            }
-            for (int j = 0; j < i; j++) {
-                strings1[index] = "";
-                index++;
-            }
-        }
-        String s = "";
-            for (Object o : sx) {
-                   ;
-                    s += "'";
-                    s += strings1[(int) o];
-                    s += "'";
-                    s += ",";
-            }
-        s = s.substring(0, s.length() - 1);
-        return s;
-    }
-}

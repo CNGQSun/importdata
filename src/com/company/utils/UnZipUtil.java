@@ -27,6 +27,7 @@ public class UnZipUtil {
      */
     private static final int BUFFER = 512;
     //将解压后的文件存储在fileNames中，如有多个文件就以“,”分割进行拼接
+    //程序运行过程中，只解压一次文件，因此无需将fileNames重置
     public static ArrayList<String> fileNames = new ArrayList<>();
 
     /**

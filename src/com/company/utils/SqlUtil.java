@@ -14,18 +14,24 @@ public class SqlUtil {
     /**
      * 处理数据
      */
+    public static String successFileName="";
+    public static String failFileName="";
     public static void runInsert(String pathFile, String unzipFilePath) {
         //解压缩文件
         ArrayList fileArrayList = ReadFileUtil.readZipFile(pathFile, unzipFilePath);
-        if (fileArrayList.size() > 0) {
+        if (fileArrayList!=null&&fileArrayList.size()> 0) {
+            File resultMkdir=new File(unzipFilePath+"/"+DateUtil.getMkdirName());
+            resultMkdir.mkdirs();
+            File successMkdir=new File(resultMkdir.getAbsolutePath()+"/success");
+            File failMkdir=new File(resultMkdir.getAbsolutePath()+"/fail");
+            successMkdir.mkdirs();
+            failMkdir.mkdirs();
             //获取example模板文件表头
             String header = ReadFileUtil.getProperties();
             //根据tab分割
             String[] template = header.split("\t");
             //本次程序运行导入的数据总条数
             int allDataCount=0;
-            int successCount=0;
-            int failCount=0;
             //遍历解压后的文件，分别进行数据库导入操作
             for (Object path : fileArrayList) {
                 Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
@@ -50,6 +56,7 @@ public class SqlUtil {
                         String sql1 = "insert into CB_BASIC_DATA select * from CB_BASIC_DATA_BAK";
                         //插入之前先清空临时表
                         doSql("truncate table CB_BASIC_DATA_BAK");
+                        //doSql("truncate table CB_BASIC_DATA");
                         String s = null;
                         Boolean flag = true;
                         while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
@@ -74,17 +81,20 @@ public class SqlUtil {
                         if (flag) {
                             //拷贝数据到主表
                             if (doSql(sql1)){
-                                successCount++;
+                                successFileName+=fileName+",";
+                                ReadFileUtil.copyFile(unzipPath,successMkdir.getAbsolutePath()+"/"+fileName);
                                 Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
                                 long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
                                 System.out.println(end+"\t"+fileName + "导入数据库成功,共导入" + dataCount + "条,耗时:"+timeElapsed+"毫秒");
                             }else {
-                                failCount++;
+                                ReadFileUtil.copyFile(unzipPath,failMkdir.getAbsolutePath()+"/"+fileName);
+                                failFileName+=fileName+",";
                                 System.out.println("导入数据库失败！");
                             }
                         }
                     } else {
-                        failCount++;
+                        failFileName+=fileName+",";
+                        ReadFileUtil.copyFile(unzipPath,failMkdir.getAbsolutePath()+"/"+fileName);
                         System.out.println(fileName + "文件格式不正确,导入数据错误！");
                     }
                 } catch (Exception e) {
@@ -98,7 +108,7 @@ public class SqlUtil {
                 }
             }
             System.out.println();
-            System.out.println("成功"+successCount+"个文件,失败"+failCount+"个文件,共导入："+allDataCount+"条数据");
+            System.out.println("成功:"+successFileName+"\n"+"失败:"+failFileName+"\n"+"共导入："+allDataCount+"条数据");
         } else {
             System.out.println("压缩包里没有文件！");
         }

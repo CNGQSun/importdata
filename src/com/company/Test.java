@@ -11,7 +11,7 @@ public class Test {
 
     public static void main(String[] args) {
         Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
-        System.out.println( start+"\t程序开始运行");
+        System.out.println( start+"\t开始运行");
         if (args.length == 2) {
             System.out.println("待解压文件路径：" + args[0] + "\t解压后的路径：" + args[1]);
             //文件判断
@@ -23,6 +23,6 @@ public class Test {
         }
         Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
         long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
-        System.out.println(end+"\t程序运行结束,共耗时：" + timeElapsed + "毫秒");
+        System.out.println(end+"\t运行结束,共耗时：" + timeElapsed + "毫秒");
     }
 }
