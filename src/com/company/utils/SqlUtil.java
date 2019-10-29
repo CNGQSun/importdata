@@ -30,6 +30,7 @@ public class SqlUtil {
             String header = ReadFileUtil.getProperties();
             //根据tab分割
             String[] template = header.split("\t");
+            String insertTemplate=ArrayUtil.field(template);
             //本次程序运行导入的数据总条数
             int allDataCount=0;
             //遍历解压后的文件，分别进行数据库导入操作
@@ -47,7 +48,6 @@ public class SqlUtil {
                     String field = br.readLine();//使用readLine方法，一次读一行
                     String[] targetHead = field.split("\t");
                     System.out.println("目标文件：" + field);
-                    System.out.println("模板文件：" + header);
                     //如果目标文件与模板文件表头一致
                     if (ArrayUtil.judgeArray(targetHead, template)) {
                         //单个文件中导入的条数记录
@@ -69,7 +69,7 @@ public class SqlUtil {
                             String[] targe = replace.split("\t");
                             //获取字段值的个数，如果个数与字段个数不一致，需要在最后补""空值，次操作在数组
                             //System.out.println(ArrayUtil.content(s1, s2));
-                            String sql = "insert into CB_BASIC_DATA_BAK (" + ArrayUtil.field(template) + ") values (" + ArrayUtil.content(targetHead, targe) + ")";
+                            String sql = "insert into CB_BASIC_DATA_BAK ("+insertTemplate+") values (" + ArrayUtil.content(targetHead, targe) + ")";
                             //执行插入操作，存在插入异常即终止操作
                             if (!doSql(sql)) {
                                 flag = false;
@@ -124,13 +124,21 @@ public class SqlUtil {
         Boolean flag = null;
         Connection conn = null;
         Statement st = null;
+        final int batchSize = 1000;
+        int count = 0;
         try {
             conn = JDBCC3P0Util.getConnection();
             st = conn.createStatement();
-            int i = st.executeUpdate(sql);
-            if (i > 0) {
-                flag = true;
+            for (int i = 0; i < 10000; i++) {
+                st.addBatch(sql);
+                //小批量提交,避免OOM
+                if(++count % batchSize == 0) {
+                    st.executeBatch();
+                }
             }
+            int[] i=st.executeBatch(); //提交剩余的数据
+
+                flag = true;
 
         } catch (SQLException e) {
             e.printStackTrace();

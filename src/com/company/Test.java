@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
-
+    //E:/test1/basic_data.zip E:/test
     public static void main(String[] args) {
         Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
         System.out.println( start+"\t开始运行");

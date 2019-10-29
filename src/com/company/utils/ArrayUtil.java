@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class ArrayUtil {
     /**
      * 传入表头（字段名）处理字段名
-     *
      * @param field 传入的数组为表头
      * @return 返回a, b, c...格式的String
+     * 只执行一轮
      */
 
     public static ArrayList sx = new ArrayList();
@@ -29,6 +29,7 @@ public class ArrayUtil {
      * @param targetHead 目标头
      * @param template   模板
      * @return boolean类型
+     * 一个文件只执行一轮
      */
     public static Boolean judgeArray(String[] targetHead, String[] template) {
         sx = new ArrayList();
@@ -52,6 +53,7 @@ public class ArrayUtil {
      * @param targetHead 目标文件的字段名
      * @param targe      目标文件的字段值
      * @return 返回"'a','b','c',..."格式的String
+     * 一行数据执行一轮
      */
     public static String content(String[] targetHead, String[] targe) {
         String[] strings1 = new String[targetHead.length];
@@ -68,7 +70,6 @@ public class ArrayUtil {
         }
         String s = "";
         for (Object o : sx) {
-            ;
             s += "'";
             s += strings1[(int) o];
             s += "'";
@@ -76,6 +77,19 @@ public class ArrayUtil {
         }
         s = s.substring(0, s.length() - 1);
         return s;
+    }
+
+    public static void Test(){
+        String [] a={"a","b","c"};
+        String [] b=new String[4];
+        b[3]="d";
+        b=a;
+
+        System.out.println(b.length);
+    }
+
+    public static void main(String[] args) {
+        ArrayUtil.Test();
     }
 }
 
