@@ -1,10 +1,15 @@
 package com.company.utils;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class ArrayUtil {
     /**
      * 传入表头（字段名）处理字段名
+     *
      * @param field 传入的数组为表头
      * @return 返回a, b, c...格式的String
      * 只执行一轮
@@ -57,10 +62,15 @@ public class ArrayUtil {
      */
     public static String content(String[] targetHead, String[] targe) {
         String[] strings1 = new String[targetHead.length];
+        String regxpForHtml = "<([^>]*)>";
+        Pattern pattern = Pattern.compile(regxpForHtml);
         int index = targe.length;
         if (targe.length < targetHead.length) {
             int i = targetHead.length - targe.length;
             for (int k = 0; k < targe.length; k++) {
+                if (k==2||k==3||k==4||k==39){
+                    targe[k]=targe[k].replaceAll("<([^>]*)>","");
+                }
                 strings1[k] = targe[k];
             }
             for (int j = 0; j < i; j++) {
@@ -70,20 +80,30 @@ public class ArrayUtil {
         }
         String s = "";
         for (Object o : sx) {
+            int i = (int) o;
             s += "'";
-            s += strings1[(int) o];
+            s += strings1[i];
             s += "'";
             s += ",";
         }
         s = s.substring(0, s.length() - 1);
+        //s=CleanUtil.cleanAll(s);
+        s = StringEscapeUtils.unescapeHtml4(s);
+        HashMap<String, String> laDingTable = LaDingUtil.LaDingTable;
+        for (String key : laDingTable.keySet()) {
+            String value=laDingTable.get(key);
+            if (s.contains(key)){
+                s=s.replace(key,value);
+            }
+        }
         return s;
     }
 
-    public static void Test(){
-        String [] a={"a","b","c"};
-        String [] b=new String[4];
-        b[3]="d";
-        b=a;
+    public static void Test() {
+        String[] a = {"a", "b", "c"};
+        String[] b = new String[4];
+        b[3] = "d";
+        b = a;
 
         System.out.println(b.length);
     }
