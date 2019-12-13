@@ -1,5 +1,7 @@
 package com.company.utils;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class SqlUtil {
+    private static Logger log=Logger.getLogger(ReadFileUtil.class);
     public static Boolean doSql(String sql) {
         Boolean flag = null;
         Connection conn = null;
@@ -58,6 +61,7 @@ public class SqlUtil {
                 File file = new File(unzipPath);
                 String fileName = file.getName();
                 System.out.println();
+                log.info(start + "\t" + fileName + "正在导入中...");
                 System.out.println(start + "\t" + fileName + "正在导入中...");
                 BufferedReader br = null;
                 Connection conn = null;
@@ -71,6 +75,7 @@ public class SqlUtil {
                     //先读取字段名即第一行
                     String field = br.readLine();//使用readLine方法，一次读一行
                     String[] targetHead = field.split("\t");
+                    log.info("目标文件：" + field);
                     System.out.println("目标文件：" + field);
                     //如果目标文件与模板文件表头一致
                     if (ArrayUtil.judgeArray(targetHead, template)) {
@@ -120,16 +125,19 @@ public class SqlUtil {
                                 ReadFileUtil.copyFile(unzipPath, successMkdir.getAbsolutePath() + "/" + fileName);
                                 Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
                                 long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
+                                log.info(end + "\t" + fileName + "导入数据库成功,共导入" + dataCount + "条,耗时:" + timeElapsed + "毫秒");
                                 System.out.println(end + "\t" + fileName + "导入数据库成功,共导入" + dataCount + "条,耗时:" + timeElapsed + "毫秒");
                             } else {
                                 ReadFileUtil.copyFile(unzipPath, failMkdir.getAbsolutePath() + "/" + fileName);
                                 failFileName += fileName + ",";
+                                log.info("导入数据库失败！");
                                 System.out.println("导入数据库失败！");
                             }
                         }
                     } else {
                         failFileName += fileName + ",";
                         ReadFileUtil.copyFile(unzipPath, failMkdir.getAbsolutePath() + "/" + fileName);
+                        log.info(fileName + "文件格式不正确,导入数据错误！");
                         System.out.println(fileName + "文件格式不正确,导入数据错误！");
                     }
                 } catch (Exception e) {
@@ -144,8 +152,10 @@ public class SqlUtil {
                 }
             }
             System.out.println();
+            log.info("成功:" + successFileName + "\n" + "失败:" + failFileName + "\n" + "共导入：" + allDataCount + "条数据");
             System.out.println("成功:" + successFileName + "\n" + "失败:" + failFileName + "\n" + "共导入：" + allDataCount + "条数据");
         } else {
+            log.info("压缩包里没有文件！");
             System.out.println("压缩包里没有文件！");
         }
     }

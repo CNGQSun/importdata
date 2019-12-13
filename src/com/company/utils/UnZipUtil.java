@@ -1,6 +1,8 @@
 package com.company.utils;
 
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -21,6 +23,8 @@ import java.util.zip.ZipOutputStream;
  * @date 2018年5月23日下午3:50:01
  */
 public class UnZipUtil {
+    private static Logger log=Logger.getLogger(ReadFileUtil.class);
+
 
     /**
      * 缓冲器大小
@@ -131,6 +135,7 @@ public class UnZipUtil {
      */
     public static boolean unzip(String zipFileName, String dstPath) {
         Instant start = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+        log.info(start+"\t文件正在解压缩...");
         System.out.println(start+"\t文件正在解压缩...");
         int countFileNum=0;
         try {
@@ -151,6 +156,7 @@ public class UnZipUtil {
                         outputStream.write(buffer, 0, readLength);
                     }
                     outputStream.close();
+                    log.info("解压后的路径: " + file.getCanonicalPath());
                     System.out.println("解压后的路径: " + file.getCanonicalPath());
                     countFileNum++;
                     fileNames.add(file.getCanonicalPath());
@@ -167,6 +173,7 @@ public class UnZipUtil {
         }
         Instant end = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
         long timeElapsed = Duration.between(start, end).toMillis(); // 单位为毫秒
+        log.info(end+"\t文件解压缩成功,共"+countFileNum+"个文件,耗时"+timeElapsed + "毫秒");
         System.out.println(end+"\t文件解压缩成功,共"+countFileNum+"个文件,耗时"+timeElapsed + "毫秒");
         return true;
     }

@@ -1,13 +1,18 @@
 package com.company.utils;
 
 import com.company.Test;
+import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class ReadFileUtil {
     private static  Properties p= Test.p;
+    private static Logger log=Logger.getLogger(ReadFileUtil.class);
     /**
      * 解压zip文件
      *
@@ -27,6 +32,7 @@ public class ReadFileUtil {
         if (unZip) {
             unzipPathArrayList = UnZipUtil.fileNames;
         } else {
+            log.info("文件解压缩失败!");
             System.out.println("文件解压缩失败!");
         }
         return unzipPathArrayList;
@@ -72,17 +78,20 @@ public class ReadFileUtil {
                     //待解压文件和解压后路径都正确，返回0
                     return true;
                 } else {
+                    log.info("您输入的解压后路径不是文件夹");
                     System.out.println("您输入的解压后路径不是文件夹");
                     //待解压文件正确，解压后的路径是文件，返回1
                     return false;
                 }
             } else {
                 //待解压文件正确，解压后路径不存在，返回2
+                log.info("您输入的解压后路径不存在，已帮您新建该文件夹");
                 System.out.println("您输入的解压后路径不存在，已帮您新建该文件夹");
                 unzipFile.mkdirs();
                 return true;
             }
         } else {
+            log.info("您输入的待解压文件不正确！");
             System.out.println("您输入的待解压文件不正确！");
             //待解压文件不存在，返回3
             return false;
@@ -115,6 +124,7 @@ public class ReadFileUtil {
                 inStream.close();
             }
         } catch (Exception e) {
+            log.info("复制单个文件操作出错");
             System.out.println("复制单个文件操作出错");
             e.printStackTrace();
 
